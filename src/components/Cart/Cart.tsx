@@ -1,6 +1,8 @@
 import { fetchProducts } from "@/api/api";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import HalfRating from "../Rating/Rating";
+import Grid from '@mui/material/Grid2';
 interface Product {
   id: string;
   category: string;
@@ -11,7 +13,12 @@ interface Product {
   rating: number;
 }
 
-const Cart: React.FC<{ currentPage: number; setCurrentPage: (page: number) => void }> = ({ currentPage, setCurrentPage }) => {
+interface Pages {
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+}
+
+const Cart: React.FC<Pages> = ({ currentPage, setCurrentPage }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +37,7 @@ const Cart: React.FC<{ currentPage: number; setCurrentPage: (page: number) => vo
     };
 
     fetchData();
-  }, [currentPage, fetchProducts]);
+  }, [currentPage]);
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -41,24 +48,37 @@ const Cart: React.FC<{ currentPage: number; setCurrentPage: (page: number) => vo
   }
 
   return (
-    <div>
-      <h1>Карточки</h1>
+    <Grid container spacing={1} justifyContent="flex-start" sx={{ paddingLeft: 3 }}>
       {products.length > 0 ? (
-        <ul>
-          {products.map((product: Product) => (
-            <li key={product.id}>
-              <h2>{product.title}</h2>
-              <p dangerouslySetInnerHTML={{ __html: product.description }} />
-              <p>Цена: {product.price} руб.</p>
-              <img src={product.picture} alt={product.title} style={{ width: '100px', height: 'auto' }} />
-              <p>Рейтинг: {product.rating}</p>
-            </li>
-          ))}
-        </ul>
+        products.map((product: Product) => (
+       
+            <Card sx={{ width: 250,height:420, borderRadius: '16px' }} key={product.id}> 
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="250"
+                  image={product.picture}
+                  alt={product.title}
+                />
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {product.title}
+                  </Typography>
+                  <HalfRating product={product} />
+                  <Typography variant="body1" color="text.black">
+                    {product.price} ₽
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+     
+        ))
       ) : (
-        <p>Нет доступных продуктов</p>
+        <Grid size={4}>
+          <p>Нет доступных продуктов</p>
+        </Grid>
       )}
-    </div>
+    </Grid>
   );
 };
 

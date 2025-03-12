@@ -24,7 +24,7 @@ export const  PaginationRounded: React.FC<PaginationRoundedProprs> = ({ currentP
   }, [setCurrentPage]);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} paddingBottom={"40px"}>
       <Pagination count={10} shape="rounded" onChange={handlePageChange} />
     </Stack>
   );
